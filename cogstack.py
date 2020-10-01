@@ -1,6 +1,7 @@
 import getpass
 import elasticsearch
 import elasticsearch.helpers
+import pandas as pd
 
 from typing import Dict, List
 
@@ -30,3 +31,27 @@ class CogStack(object):
             request_timeout=request_timeout)
 
         return docs_generator
+
+
+def cogstack2df(cogstack_search_gen, column_headers=None):
+    """
+    Returns DataFrame from CogStack search
+
+    :param cogstack_search_gen: CogStack output generator object
+    :param column_headers: specify column headers
+    :return: DataFrame
+    """
+    results = [column_headers]
+    for i, doc in enumerate(cogstack_search_gen):
+        if column_headers is None:
+            column_headers = ['id'] + list(doc['_source'].keys())
+            results = [column_headers]
+        result = []
+        for col in column_headers:
+            if col == 'id':
+                result.append(doc['_id'])
+            else:
+                result.append(doc['_source'].get(col, ''))
+        results.append(result)
+    df_results = pd.DataFrame(results[1:], columns=results[0])
+    return df_results
