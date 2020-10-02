@@ -86,10 +86,8 @@ def cogstack2csv(cogstack_search_gen, filename, column_headers=None):
             print(f"{counter} to csv")
             df_results = pd.DataFrame(results[1:], columns=results[0])
             df_results.to_csv(filename, header=column_headers, index=False, mode='a', chunksize=10000)
-            results = []
+            results = []  # TODO check if this recovers memory
 
-    if df_results is None:
-        pd.DataFrame({}).to_csv(filename, header=column_headers, index=False)  # TODO check if necessary
     df_results = pd.DataFrame(results[1:], columns=results[0])
     df_results.to_csv(filename, header=column_headers, index=False, mode='a', chunksize=10000)
     return
