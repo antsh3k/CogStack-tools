@@ -58,7 +58,6 @@ def cogstack2df(cogstack_search_gen, column_headers=None):
 
 
 def cogstack2csv(cogstack_search_gen, filename, column_headers=None):
-    # TODO: Complete function for chunking large searches.
     """
     Returns CSV from CogStack search
 
@@ -82,11 +81,11 @@ def cogstack2csv(cogstack_search_gen, filename, column_headers=None):
         results.append(result)
 
         if len(results) > counter:
+            print(f"{counter} hits to csv")
             counter += 100000
-            print(f"{counter} to csv")
             df_results = pd.DataFrame(results[1:], columns=results[0])
             df_results.to_csv(filename, header=column_headers, index=False, mode='a', chunksize=10000)
-            results = []  # TODO check if this recovers memory
+            results = []
 
     df_results = pd.DataFrame(results[1:], columns=results[0])
     df_results.to_csv(filename, header=column_headers, index=False, mode='a', chunksize=10000)
